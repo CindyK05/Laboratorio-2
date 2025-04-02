@@ -1,30 +1,30 @@
 #!/bin/bash
 
 
-if [ "$#" -ne 1]; then 
+if [ "$#" -ne 1 ]; then 
 
-	echo "Sin $0 <comando_del_proceso>" >&2
+	echo "Sin <comando> $0 " >&2
 
 	exit 1
 fi 
 
 Coma_p=$1
-log_archi="Monitorear_${Coma_p}.log"
+log_archivos="Monitorear_${Coma_p}.log"
 
 $Coma_p & 
 
-pid=$!
+Identificador_p=$!
 
-echo "Se esta monitoreando el proceso $Coma_p (PID: $pid)"
+echo "Se esta monitoreando el proceso $Coma_p (PID: $Identificador_p)"
 
-echo "Tiempo, CPU, Mem" > "$log_archi"
+echo "Tiempo, CPU, Mem" > "$log_archivos"
 
-while ps -p "$pid" > /dev/null; do
+while ps -p "$Identificador_p" > /dev/null; do
 
-	Estado=$(ps -p "$pid" -o %cpu,%mem --no-headers)
-	tiempopa=$(date +"%Y-%m-%d %H:%M:%S")
+	Estado=$(ps -p "$Identificador_p" -o %cpu,%mem --no-headers)
+	Tiempo=$(date +"%Y-%m-%d %H:%M:%S")
 
-    echo "$tiempopa,$Estado" >> "$log_archi"
+    echo "$Tiempo,$Estado" >> "$log_archivos"
 
     sleep 1
 done
@@ -48,14 +48,12 @@ gnuplot <<- EOF
 
     set ylabel "Porcentaje"
 
-    plot "${log_archi}" using 1:2 with lines title "CPU %", \
+    plot "${log_archivos}" using 1:2 with lines title "CPU %", \
 
-         "${log_archi}" using 1:3 with lines title "Memoria %"
+         "${log_archivos}" using 1:3 with lines title "Memoria %"
 
 EOF
 
 
 
-echo "Gráfico generado en monitor_${Coma_p}.png"
-~                                                                                                                       
-                                                                                                  
+echo "Gráfico del monitor_${Coma_p}.png"                                                                                                                                          

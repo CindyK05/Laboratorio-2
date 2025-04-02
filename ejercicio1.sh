@@ -9,7 +9,7 @@ fi
 
 if [ "$#" -ne 3 ]; then
 	
-	echo "Error, $0 falta  <Usuario> <Grupo> <Ruta_Archivo>" >&2
+	echo "Error, $0 sin <Usuario> <Grupo> <Ruta_Archivo>" >&2
 	
 	exit 1
 fi
@@ -32,19 +32,22 @@ if grep -q "^$Grupo:" /etc/group; then
     echo "Grupo $Grupo, existente"
 
 else
-
-    groupadd "$Grupo" && echo "Grupo $Grupo creado"
+        echo "Este grupo $grupo no existe"
+        echo "Creando $Grupo"
+	groupadd "$Grupo" && echo "Grupo $Grupo creado"
 
 fi
 
 
 if id "$Usuario" &>/dev/null; then
 
-    echo "Usuario $Usuario,existente"
+    echo "Usuario $Usuario, existente"
+    
+else	
 
-else
-
-    useradd -m -G "$Grupo" "$Usuario" && echo "Usuario $Usuario creado"
+	echo "Este usuario $Usuario no existe"
+	echo "Creando $Usuario"
+	useradd -m -G "$Grupo" "$Usuario" && echo "Usuario $Usuario creado"
 
 fi
 
